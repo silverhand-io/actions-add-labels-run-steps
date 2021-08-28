@@ -1,0 +1,34 @@
+# https://docs.github.com/en/actions/creating-actions/creating-a-composite-run-steps-action
+name: Add labels
+inputs:
+  title:
+    required: true
+  github-token:
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Extract Label
+      id: extract-label
+      run: |
+        echo "::set-output name=labels_to_add::$(
+          node -e "
+            const title = process.env.TITLE;
+            const labelMapping = {
+              chore: 'chore',
+              feat: 'feature',
+              fix: 'bugfix',
+              refactor: 'enhancement',
+              test: 'testing',
+            };
+            const foundKey = Object.keys(labelMapping).find((label) => title && title.startsWith(label));
+            console.log(foundKey ? labelMapping[foundKey] : '');
+          "
+        )"
+      env:
+        TITLE: ${{ inputs.title }}
+
+    - uses: actions-ecosystem/action-add-labels@v1.1.0
+      with:
+        github_token: ${{ inputs.github-token }}
+        labels: ${{ steps.extract-label.outputs.labels_to_add }}
