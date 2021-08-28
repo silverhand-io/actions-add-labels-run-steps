@@ -10,6 +10,7 @@ runs:
   steps:
     - name: Extract Label
       id: extract-label
+      shell: bash
       run: |
         echo "::set-output name=labels_to_add::$(
           node -e "
