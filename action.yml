@@ -33,3 +33,23 @@ runs:
       with:
         github_token: ${{ inputs.github-token }}
         labels: ${{ steps.extract-label.outputs.labels_to_add }}
+
+    - uses: codelytv/pr-size-labeler@v1
+        with:
+          github_token: ${{ inputs.github-token }}
+          xs_label: 'size/xs'
+          xs_max_size: '10'
+          s_label: 'size/s'
+          s_max_size: '100'
+          m_label: 'size/m'
+          m_max_size: '250'
+          l_label: 'size/l'
+          l_max_size: '500'
+          xl_label: 'size/xl'
+          fail_if_xl: 'false'
+          message_if_xl: >
+            This PR exceeds the recommended size of 500 lines.
+            Please make sure you are NOT addressing multiple issues with one PR.
+            Note this PR might be rejected due to its size.
+          github_api_url: 'api.github.com'
+          files_to_ignore: 'pnpm-lock.yaml'
