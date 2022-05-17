@@ -29,7 +29,7 @@ runs:
       env:
         TITLE: ${{ inputs.title }}
 
-    - uses: actions-ecosystem/action-add-labels@v1.1.0
+    - uses: actions-ecosystem/action-add-labels@v1.1.3
       with:
         github_token: ${{ inputs.github-token }}
         labels: ${{ steps.extract-label.outputs.labels_to_add }}
