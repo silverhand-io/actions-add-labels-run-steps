@@ -47,8 +47,4 @@ runs:
         l_max_size: '500'
         xl_label: 'size/xl'
         fail_if_xl: 'false'
-        message_if_xl: >
-          This PR exceeds the recommended size of 500 lines.
-          Please make sure you are NOT addressing multiple issues with one PR.
-          Note this PR might be rejected due to its size.
         files_to_ignore: 'pnpm-lock.yaml'
