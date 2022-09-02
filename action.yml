@@ -46,5 +46,6 @@ runs:
         l_label: 'size/l'
         l_max_size: '500'
         xl_label: 'size/xl'
+        message_if_xl: ''
         fail_if_xl: 'false'
         files_to_ignore: 'pnpm-lock.yaml'
