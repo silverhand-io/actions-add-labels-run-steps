@@ -33,19 +33,34 @@ runs:
       with:
         github_token: ${{ inputs.github-token }}
         labels: ${{ steps.extract-label.outputs.labels_to_add }}
+    # Remove this step once the https://github.com/CodelyTV/pr-size-labeler/issues/96 is resolved
+    - name: Remove legacy PR size labels
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const labelsToRemove = ['size/xs', 'size/s', 'size/m', 'size/l', 'size/xl'];
+          const prLabels = context.payload.pull_request.labels.map(label => label.name);
+          const labelsToRemoveSet = new Set(labelsToRemove);
+          const labelsToKeep = issueLabels.filter(label => !labelsToRemoveSet.has(label));
+          await github.issues.setLabels({
+            ...context.repo,
+            issue_number: context.payload.issue.number,
+            labels: labelsToKeep
+          });
 
     - uses: codelytv/pr-size-labeler@v1
       with:
         github_token: ${{ inputs.github-token }}
-        xs_label: 'size/xs'
-        xs_max_size: '10'
-        s_label: 'size/s'
-        s_max_size: '100'
-        m_label: 'size/m'
-        m_max_size: '250'
-        l_label: 'size/l'
-        l_max_size: '500'
-        xl_label: 'size/xl'
-        message_if_xl: ''
-        fail_if_xl: 'false'
-        files_to_ignore: 'pnpm-lock.yaml'
+        xs_label: "size/xs"
+        xs_max_size: "10"
+        s_label: "size/s"
+        s_max_size: "100"
+        m_label: "size/m"
+        m_max_size: "250"
+        l_label: "size/l"
+        l_max_size: "500"
+        xl_label: "size/xl"
+        message_if_xl: ""
+        fail_if_xl: "false"
+        files_to_ignore: "pnpm-lock.yaml"
