@@ -35,7 +35,7 @@ runs:
         labels: ${{ steps.extract-label.outputs.labels_to_add }}
     # Remove this step once the https://github.com/CodelyTV/pr-size-labeler/issues/96 is resolved
     - name: Remove legacy PR size labels
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-token }}
         script: |
