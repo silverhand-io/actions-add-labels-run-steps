@@ -43,9 +43,9 @@ runs:
           const prLabels = context.payload.pull_request.labels.map(label => label.name);
           const labelsToRemoveSet = new Set(labelsToRemove);
           const labelsToKeep = prLabels.filter(label => !labelsToRemoveSet.has(label));
-          await github.issues.setLabels({
+          await github.pulls.update({
             ...context.repo,
-            issue_number: context.payload.issue.number,
+            pull_number: context.payload.pull_request.number,
             labels: labelsToKeep
           });
 
