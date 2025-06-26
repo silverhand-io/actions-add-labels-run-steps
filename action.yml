@@ -33,6 +33,7 @@ runs:
       with:
         github_token: ${{ inputs.github-token }}
         labels: ${{ steps.extract-label.outputs.labels_to_add }}
+
     # Remove this step once the https://github.com/CodelyTV/pr-size-labeler/issues/96 is resolved
     - name: Remove legacy PR size labels
       uses: actions/github-script@v6
@@ -40,9 +41,21 @@ runs:
         github-token: ${{ inputs.github-token }}
         script: |
           const labelsToRemove = ['size/xs', 'size/s', 'size/m', 'size/l', 'size/xl'];
-          const prLabels = context.payload.pull_request.labels.map(label => label.name);
+
+          // Fetch current PR labels from the API instead of relying on webhook payload
+          const pr = await github.rest.pulls.get({
+            ...context.repo,
+            pull_number: context.payload.pull_request.number
+          });
+
+          const prLabels = pr.data.labels.map(label => label.name);
           const labelsToRemoveSet = new Set(labelsToRemove);
           const labelsToKeep = prLabels.filter(label => !labelsToRemoveSet.has(label));
+
+          console.log('Current PR labels:', prLabels);
+          console.log('Labels to remove:', labelsToRemove);
+          console.log('Labels to keep:', labelsToKeep);
+
           await github.rest.pulls.update({
             ...context.repo,
             pull_number: context.payload.pull_request.number,
