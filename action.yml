@@ -53,12 +53,13 @@ runs:
           const labelsToKeep = prLabels.filter(label => !labelsToRemoveSet.has(label));
 
           console.log('Current PR labels:', prLabels);
-          console.log('Labels to remove:', labelsToRemove);
           console.log('Labels to keep:', labelsToKeep);
 
-          await github.rest.pulls.update({
+          // Update the PR with the remaining labels, use issues API instead of pulls API,
+          // as the pulls API does not support label updates directly
+          await github.rest.issues.update({
             ...context.repo,
-            pull_number: context.payload.pull_request.number,
+            issue_number: context.payload.pull_request.number,
             labels: labelsToKeep
           });
 
